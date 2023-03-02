@@ -19,3 +19,13 @@ bool Triangle::intersect(const Ray &ray, vec3 &bar, float &near) {
 	}
 	return false;
 }
+
+Box Triangle::get_box() {
+	vec3 p_min, p_max;
+	p_min.x = std::min(verts[0].x, std::min(verts[1].x, verts[2].x));
+	for (int i = 0; i < 3; ++i) {
+		p_min[i] = std::min(verts[0][i], std::min(verts[1][i], verts[2][i]));
+		p_max[i] = std::max(verts[0][i], std::max(verts[1][i], verts[2][i]));
+	}
+	return Box(p_min, p_max);
+}

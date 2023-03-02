@@ -129,11 +129,6 @@ bool Model::intersect(const Ray &ray, float &near, vec3 &nrm) {
 		return true;
 }
 
-void Model::transform(const mat4 &m) {
-	for (int i = 0; i < nverts(); ++i) {
-		verts[i] = vec3(m * vec4(verts[i], 1.0));
-	}
-}
 
 void Model::gen_normal() {
 	facet_nrm = facet_vrt;

@@ -86,6 +86,7 @@ template<> class vec<2>
 public:
 	double x, y;
 	vec() = default;
+	vec(double val) : x(val), y(val) {}
 	vec(double x, double y): x(x), y(y) {}
 	double & operator[](const int i)	   { assert(i == 0 || i == 1); return i == 0 ? x : y;}
 	double 	 operator[](const int i) const { assert(i == 0 || i == 1); return i == 0 ? x : y;}
@@ -105,6 +106,7 @@ template<> class vec<3>
 public:
 	double x, y, z;
 	vec() = default;
+	vec(double val) : x(val), y(val), z(val) {}
 	vec(double x, double y, double z): x(x), y(y), z(z) {}
 	vec(const vec<4>& v);
 	double & operator[](const int i) 	   { assert(i >= 0 && i < 3); return i ? (1 == i ? y : z) : x;}
@@ -126,6 +128,7 @@ template<> class vec<4>
 public:
 	double x, y, z, w;
 	vec() = default;
+	vec(double val) : x(val), y(val), z(val), w(val) {}
 	vec(double x, double y, double z, double w): x(x), y(y), z(z), w(w) {}
 	vec(const vec<3> &v, double w_): x(v.x), y(v.y), z(v.z), w(w_) {}
 	double & operator[](const int i) {

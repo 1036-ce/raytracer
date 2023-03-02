@@ -6,6 +6,7 @@
 #include "geometry.h"
 #include "gl.h"
 #include "ray.h"
+#include "box.h"
 
 using std::vector;
 using std::tuple;
@@ -24,6 +25,7 @@ public:
 	}
 
 	bool intersect(const Ray& ray, vec3 &bar, float &near);
+	Box  get_box();
 	~Triangle() = default;
 private:
 	vec3 verts[3];

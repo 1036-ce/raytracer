@@ -5,6 +5,7 @@
 #include "ray.h"
 #include "model.h"
 #include "tgaimage.h"
+#include "camera.h"
 
 struct Material {
     float refract_index = 1;
@@ -20,7 +21,7 @@ const Material     mirror = {1.0, {0.0, 16.0, 0.8, 0.0}, color_t(1.0, 1.0, 1.0),
 // const Material      glass = {1.5, {0.0,  0.9, 0.1, 0.8}, color_t{0.6, 0.7, 0.8},  125.};
 // const Material red_rubber = {1.0, {1.4,  0.3, 0.0, 0.0}, color_t(0.3, 0.1, 0.1),   10.};
 
-vec3 light_pos(3, 3, 2);
+vec3 light_pos(0, 0, 3);
 
 color_t cast_ray(Model *model, const Ray& ray, int depth = 0) {
 	float near = std::numeric_limits<float>::max();
@@ -53,7 +54,7 @@ color_t cast_ray(Model *model, const Ray& ray, int depth = 0) {
 	float dist = std::numeric_limits<float>::max();
     float diffuse_light_intensity = 0, specular_light_intensity = 0;
 
-	Material m = red_rubber;
+	Material m = red_rubber; 
 
 	if (model->intersect(light_ray, dist, normal)) {
 		vec3 light_pt = light_ray.at(dist);
@@ -76,7 +77,6 @@ color_t cast_ray(Model *model, const Ray& ray, int depth = 0) {
 
 int main() {
 	Model *cube = new Model("../obj/cube/cube.obj");
-	// Model *cube = new Model("../obj/floor/floor.obj");
 
 	constexpr int width = 800;
 	constexpr int height = 800;
@@ -84,7 +84,7 @@ int main() {
 	ColorBuffer color_buf(width, height, color_t(0, 0, 0));
 
 	vec3 eye(0, 0, 1);
-	float z = -height / 2.f * tanf(fovY / 2.f) - 1;
+	float z = -height / 2.f * tanf(fovY / 2.f);
 #pragma omp parallel for
 	for (int i = 0; i < width; ++i) {
 #pragma omp parallel for
@@ -92,7 +92,7 @@ int main() {
 			float x = (i + 0.5) - width / 2.f;
 			float y = (j + 0.5) - height / 2.f;
 
-			Ray ray(eye, vec3(x, y, z));
+			Ray ray(eye, vec3(x, y, z) - eye);
 			color_t c = cast_ray(cube, ray);
 			color_buf.set(i, j, 0, c);
 		}
