@@ -53,20 +53,23 @@ color_t Scene::cast_ray(const Ray &ray, int depth) {
 				vec3 diff_intensity(0);
 				vec3 spec_intensity(0);
 				for (Light light: lights) {
-					vec3 light_dir = (light.pos - pt).normalize();
+					vec3 light_dir = light.pos - pt;
+					float light_dist2 = light_dir.norm2();
+					light_dir = light_dir.normalize();
 					bool shadow = bvh.intersect(Ray(shadow_pt, light_dir)).happened;
 
 					// float tmp = dot(light_dir, normal);
 					// std::cout << tmp << std::endl;
 					float factor = std::max(0.0, dot(light_dir, normal));
-					diff_intensity += shadow ? vec3(0) : (factor * light.intensity);
+					diff_intensity += shadow ? vec3(0) : ((factor / light_dist2) * light.intensity);
 					vec3 reflect_dir = reflect(normal, -light_dir);
 					vec3 halfway_dir = ( -ray.dir + light_dir).normalize();
 					factor = std::max(0.0, -dot(reflect_dir, ray.dir));
-					spec_intensity += shadow ? vec3(0) : (pow(factor, inter.material->Ns) * light.intensity);
+					spec_intensity += shadow ? vec3(0) : (pow(factor, inter.material->Ns) / light_dist2 * light.intensity);
 				}
 
-				hit_color =  inter.material->Kd * diff_intensity; 
+				hit_color =  inter.material->Kd * diff_intensity + inter.material->Ks * spec_intensity; 
+				// hit_color = inter.material->Ks * spec_intensity;
 				break;
 			}
 			case MaterialType::REFLECT_REFRACT : {
