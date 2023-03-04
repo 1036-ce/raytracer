@@ -59,9 +59,9 @@ vec3 reflect(const vec3& n, const vec3& in);
  * 
  * @param n should be normalized
  * @param in should be normalized
- * @return vec3 
+ * @return vec3 is normalized
  */
-std::optional<vec3> refract(const vec3& N, const vec3& I, float etai, float etat);
+std::optional<vec3> refract(const vec3& N, const vec3& I, float eta);
 
 /**
  * @brief compute fresnel equation
@@ -70,4 +70,4 @@ std::optional<vec3> refract(const vec3& N, const vec3& I, float etai, float etat
  * (1 - @return) is material's refraction ratio
  * 
  */
-float fresnel(const vec3& I, const vec3& N, float etai, float etat);
+float fresnel(const vec3& I, const vec3& N, float eta);

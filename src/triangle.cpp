@@ -1,6 +1,6 @@
 #include "triangle.h"
 
-bool Triangle::intersect(const Ray &ray, vec3 &bar, float &near) {
+Intersection Triangle::intersect(const Ray &ray) {
 	auto S = ray.orig - verts[0];
 	auto E1 = verts[1] - verts[0];
 	auto E2 = verts[2] - verts[0];
@@ -12,20 +12,18 @@ bool Triangle::intersect(const Ray &ray, vec3 &bar, float &near) {
 	float alpha = dot(S1, S) / S1E1;
 	float beta = dot(S2, ray.dir) / S1E1;
 
-	if (t > 0.00001 && 1 - alpha - beta >= 0 && alpha >= 0 && beta >= 0) {
-		bar = {1 - alpha - beta, alpha, beta};
-		near = t;
-		return true;
+	// std::cout << alpha << "  " << beta << std::endl;
+
+	Intersection inter;
+	if (t > 0.001 && 1 - alpha - beta >= 0 && alpha >= 0 && beta >= 0) {
+		inter.happened = true;
+		inter.distance = t;
+		inter.uv = (1 - alpha - beta) * uv[0] + alpha * uv[1] + beta * uv[2];
+		inter.normal = (1 - alpha - beta) * normals[0] + alpha * normals[1] + beta * normals[2];
 	}
-	return false;
+	return inter;
 }
 
 Box Triangle::get_box() {
-	vec3 p_min, p_max;
-	p_min.x = std::min(verts[0].x, std::min(verts[1].x, verts[2].x));
-	for (int i = 0; i < 3; ++i) {
-		p_min[i] = std::min(verts[0][i], std::min(verts[1][i], verts[2][i]));
-		p_max[i] = std::max(verts[0][i], std::max(verts[1][i], verts[2][i]));
-	}
-	return Box(p_min, p_max);
+	return Union(Box(verts[0], verts[1]), verts[2]);
 }

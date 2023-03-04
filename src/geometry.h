@@ -106,16 +106,29 @@ template<> class vec<3>
 public:
 	double x, y, z;
 	vec() = default;
-	vec(double val) : x(val), y(val), z(val) {}
+	explicit vec(double val) : x(val), y(val), z(val) {}
 	vec(double x, double y, double z): x(x), y(y), z(z) {}
 	vec(const vec<4>& v);
 	double & operator[](const int i) 	   { assert(i >= 0 && i < 3); return i ? (1 == i ? y : z) : x;}
 	double 	 operator[](const int i) const { assert(i >= 0 && i < 3); return i ? (1 == i ? y : z) : x;}
-	vec   operator-() { return vec(-x, -y, -z); }
+	vec   operator-() const { return vec(-x, -y, -z); }
 	vec&  operator=(const vec& v) {
 		x = v.x;
 		y = v.y;
 		z = v.z;
+		return *this;
+	}
+
+	vec& operator+=(const vec& v) {
+		x += v.x;
+		y += v.y;
+		z += v.z;
+		return *this;
+	}
+	vec& operator-=(const vec& v) {
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
 		return *this;
 	}
 	double norm2() const { return x * x + y * y + z * z; }

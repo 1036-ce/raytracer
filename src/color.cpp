@@ -20,6 +20,31 @@ Color operator*(const Color &c, float intensity) {
 	return ret;
 }
 
+Color operator*(float intensity, const Color &c) {	
+	Color ret;
+	ret.r = std::min(c.r * intensity, 1.f);
+	ret.g = std::min(c.g * intensity, 1.f);
+	ret.b = std::min(c.b * intensity, 1.f);
+	ret.a = std::min(c.a * intensity, 1.f);
+	return ret;
+}
+
+Color operator*(const Color &c, const vec3& v) {
+	Color ret;
+	ret.r = std::clamp(c.r * v.x, 0.0, 1.0);
+	ret.g = std::clamp(c.g * v.y, 0.0, 1.0);
+	ret.b = std::clamp(c.b * v.z, 0.0, 1.0);
+	return ret;
+}
+
+Color operator*(const vec3& v, const Color &c) {
+	Color ret;
+	ret.r = std::clamp(c.r * v.x, 0.0, 1.0);
+	ret.g = std::clamp(c.g * v.y, 0.0, 1.0);
+	ret.b = std::clamp(c.b * v.z, 0.0, 1.0);
+	return ret;
+}
+
 Color operator+(const Color &lhs, const Color &rhs) {
 	Color ret;
 	ret.r = std::min(lhs.r + rhs.r, 1.f);

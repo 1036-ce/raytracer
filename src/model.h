@@ -3,9 +3,10 @@
 #include <string>
 #include <optional>
 #include "geometry.h"
-#include "tgaimage.h"
 #include "gl.h"
 #include "triangle.h"
+#include "box.h"
+#include "BVH.h"
 
 /**
  vertex : v {x} {y} {z} [w]	; w is optional and defaults to 1.0
@@ -18,24 +19,16 @@
 		example : f 6/4/1 3/5/3 7/6/5
 
 */
-class Model {
+class Model : public Object {
 public:
-	Model(const std::string filename); 
-	int nverts() const;
-	int nfaces() const;
-	vec3 normal(const int iface, const int nthvert) const; 	// per triangle corner normal vertex
-	vec3 vert(const int i) const;
-	vec3 vert(const int iface, const int nthvert) const;
-	vec2 uv(const int iface, const int nthvert) const;
-	bool intersect(const Ray& ray, float &near, vec3 &normal);
-	void transform(const mat4& m);
+	Model() = default;
+	Model(const std::string& path);
+	Intersection intersect(const Ray& ray) override;
+	Box  get_box() override { return bbox;}
+	void set_material(Material* m) { material = m;}
 private:
-	void gen_normal();
-
-	std::vector<vec3> verts{};		// array of vertices
-	std::vector<vec2> tex_coord{}; 	// per-vertex array of tex coords
-	std::vector<vec3> norms{};		// per-vertex array of notmal vectors
-	std::vector<int> facet_vrt{};
-	std::vector<int> facet_tex{};	// per-triangle indices in the above arrays
-	std::vector<int> facet_nrm{};
+	Box bbox;
+	std::vector<Triangle> triangles;
+	Material *material = nullptr;
+	BVH bvh;
 };

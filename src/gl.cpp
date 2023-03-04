@@ -137,21 +137,24 @@ vec3 reflect(const vec3& n, const vec3& in) {
 	return ((-2 * n * in) * n + in).normalize();
 }
 
-std::optional<vec3> refract(const vec3& N, const vec3& I, float etai, float etat) {
+std::optional<vec3> refract(const vec3& N, const vec3& I, float eta) {
 	float cosi = dot(I, N);
+	float etai = 1, etat = eta;
 	vec3 n = N;
-	if (cosi < 0) { cosi = -cosi; } else { n = -n; std::swap(etai, etat);}
+	if (cosi < 0) { cosi = -cosi; } else { n = -n; std::swap(etai, etat); }
 	float ratio = etai / etat;
 	float k = 1 - ratio * ratio * (1 - cosi * cosi);
 	std::optional<vec3> ret;
 	if (k > 0)
-		return ret.emplace(ratio * I - (ratio * cosi - sqrtf(k)) * n);
+		return ret.emplace(ratio * I + (ratio * cosi - sqrtf(k)) * n);
 	return ret;
 }
 
 // https://en.wikipedia.org/wiki/Fresnel_equations
-float fresnel(const vec3 &I, const vec3 &N, float etai, float etat) {
+float fresnel(const vec3 &I, const vec3 &N, float eta) {
 	float cosi = dot(I, N);
+	float etai = 1, etat = eta;
+	if (cosi > 0)	std::swap(etai, etat);
 	float sint = etai / etat * sqrtf(1 - cosi * cosi);
 	if (sint >= 1)	// total internal reflection
 		return 1;
