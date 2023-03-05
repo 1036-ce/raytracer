@@ -27,3 +27,11 @@ Intersection Triangle::intersect(const Ray &ray) {
 Box Triangle::get_box() {
 	return Union(Box(verts[0], verts[1]), verts[2]);
 }
+
+void Triangle::transform(const mat4 &m) {
+	mat4 mit = m.invert_transpose();
+	for (int i = 0; i < 3; ++i) {
+		verts[i] = vec3(m * vec4(verts[i], 1.0));
+		normals[i] = vec3(mit * vec4(normals[i], 1.0));
+	}
+}

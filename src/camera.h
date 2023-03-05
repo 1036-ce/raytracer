@@ -1,14 +1,17 @@
 #pragma once
 #include "geometry.h"
+#include "ray.h"
 
 class Camera {
 public:
 	Camera() = default;
-	Camera(vec3 pos_, vec3 target_, vec3 up_)
-		: pos(pos_), target(target_), up(up_) { }
-	mat4 get_view_mat();
+	Camera(vec3 pos, vec3 target, vec3 up, int width, int height, float fovY);
+	Ray get_ray(float x, float y);
+	
 private:
 	vec3 pos;
-	vec3 target;
+	vec3 left_down;	// screen left down corner
+	vec3 right;
 	vec3 up;
+	vec3 front;
 };

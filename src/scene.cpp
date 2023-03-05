@@ -2,21 +2,22 @@
 #include "gl.h"
 #include "tgaimage.h"
 #include "buffer.h"
+#include "camera.h"
 
 void Scene::render() {
 	buildBVH();
 
 	ColorBuffer color_buf(width, height, color_t(0, 0, 0));
-	vec3 eye_pos(-1, 5, 10);
+	vec3 eye_pos(1, 0, 1);
+	vec3 center(0, 0, 0);
+	vec3 up(0, 1, 0);
+
+	Camera camera(eye_pos, center, up, width, height, fovY);
 
 	for (int i = 0; i < width; ++i) {
 		#pragma omp parallel for
 		for (int j = 0; j < height; ++j) {
-			float x = ((float)i + 0.5) - width / 2.f;
-			float y = ((float)j + 0.5) - height / 2.f;
-			float z = -height / 2 * tanf(fovY / 2.f);
-
-			Ray ray(eye_pos, vec3(x, y, z));
+			Ray ray = camera.get_ray(i, j);
 			color_t color = cast_ray(ray, 0);
 			color_buf.set(i, j, 0, color);
 		}

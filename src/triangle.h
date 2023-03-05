@@ -24,6 +24,8 @@ public:
 
 	Intersection intersect(const Ray& ray) override;
 	Box  get_box()  override;
+
+	void transform(const mat4& m);
 	~Triangle() = default;
 private:
 	vec3 verts[3];

@@ -26,6 +26,7 @@ public:
 	Intersection intersect(const Ray& ray) override;
 	Box  get_box() override { return bbox;}
 	void set_material(Material* m) { material = m;}
+	void transform(const mat4& m);
 private:
 	Box bbox;
 	std::vector<Triangle> triangles;

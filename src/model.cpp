@@ -18,7 +18,8 @@ Model::Model(const std::string &path) {
 		vec2 uv_coords[3];
 		for (int j = 0; j < 3; ++j) {
 			auto &vertice = mesh.Vertices[i + j];
-			verts[j]  = vec3(vertice.Position.X, vertice.Position.Y, vertice.Position.Z) * 60.f;
+			// verts[j]  = vec3(vertice.Position.X, vertice.Position.Y, vertice.Position.Z) * 60.f;
+			verts[j]  = vec3(vertice.Position.X, vertice.Position.Y, vertice.Position.Z);
 			nrms[j]   = vec3(vertice.Normal.X, vertice.Normal.Y, vertice.Normal.Z);
 			uv_coords[j] = vec2(vertice.TextureCoordinate.X, vertice.TextureCoordinate.Y);
 
@@ -39,4 +40,9 @@ Intersection Model::intersect(const Ray &ray) {
 	auto ret = bvh.intersect(ray);
 	ret.material = material;
 	return ret;
+}
+
+void Model::transform(const mat4 &m) {
+	for (auto& tri: triangles)
+		tri.transform(m);
 }
