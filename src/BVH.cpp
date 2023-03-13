@@ -13,12 +13,14 @@ BVHNode *BVH::build(std::vector<Object*> objs) {
 		node->object = objs[0];
 		node->left = nullptr;
 		node->right = nullptr;
+		node->area = objs[0]->get_area();
 	}
 	else if (objs.size() == 2) {
 		node->left = build(std::vector<Object*>{objs[0]});
 		node->right = build(std::vector<Object*>{objs[1]});
 
 		node->box = Union(node->left->box, node->right->box);
+		node->area = node->left->area + node->right->area;
 	}
 	else {
 		Box box;
@@ -53,6 +55,7 @@ BVHNode *BVH::build(std::vector<Object*> objs) {
 		node->right = build(right_part);
 
 		node->box = Union(node->left->box, node->right->box);
+		node->area = node->left->area + node->right->area;
 	}
 
 	return node;
@@ -65,6 +68,7 @@ Intersection BVH::intersect(const Ray &ray) {
 	inter = get_intersection(root, ray);
 	return inter;
 }
+
 
 Intersection BVH::get_intersection(BVHNode *root, const Ray &ray) {
 	if (!root->box.is_intersect(ray))
@@ -82,4 +86,24 @@ Intersection BVH::get_intersection(BVHNode *root, const Ray &ray) {
 		auto ret = root->object->intersect(ray);
 		return ret;
 	}
+}
+
+
+void BVH::sample(Intersection &inter, float &pdf) {
+	float p = sqrt(random_float()) * root->area;
+	get_sample(root, p, inter, pdf);
+	pdf /= root->area;
+}
+
+void BVH::get_sample(BVHNode *root, float p, Intersection &inter, float &pdf) {
+	if (root->left == nullptr || root->right == nullptr) {
+		root->object->sample(inter, pdf);
+		pdf *= root->area;
+		return;
+	}
+
+	if (p < root->left->area)
+		get_sample(root->left, p, inter, pdf);
+	else
+		get_sample(root->right, p - root->left->area, inter, pdf);
 }

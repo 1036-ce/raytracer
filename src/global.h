@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 #include "color.h"
 
 // global type alias
@@ -6,6 +7,14 @@ using color_t = Color;
 using depth_t = float;
 
 constexpr float PI = 3.141592653;
+
+inline float random_float() {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<> dis(0.f, 1.f);
+
+    return dis(gen);
+}
 
 inline void update_progress(float progress)
 {

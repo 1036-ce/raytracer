@@ -22,13 +22,17 @@
 class Model : public Object {
 public:
 	Model() = default;
-	Model(const std::string& path);
+	Model(const std::string& path, Material *m = new Material());
 	Intersection intersect(const Ray& ray) override;
+	bool is_intersect(const Ray& ray) override;
 	Box  get_box() override { return bbox;}
+	float get_area() override;
+	bool  is_emmision() override;
 	void set_material(Material* m) { material = m;}
-	void transform(const mat4& m);
+	void sample(Intersection &inter, float &pdf) override;
 private:
 	Box bbox;
+	float area;
 	std::vector<Triangle> triangles;
 	Material *material = nullptr;
 	BVH bvh;

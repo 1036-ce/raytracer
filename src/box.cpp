@@ -37,5 +37,5 @@ bool Box::is_intersect(const Ray &ray) {
 	double enter = std::max(x_min, std::max(y_min, z_min));
 	double exit  = std::min(x_max, std::max(y_max, z_max));
 
-	return enter < exit && exit >= 0;
+	return enter <= exit && exit >= 0;
 }

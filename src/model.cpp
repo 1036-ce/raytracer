@@ -2,7 +2,8 @@
 #include "OBJ_Loader.h"
 #include "geometry.h"
 
-Model::Model(const std::string &path) {
+Model::Model(const std::string &path, Material *m) {
+	material = m;
 	objl::Loader loader;
 	loader.LoadFile(path);
 
@@ -31,8 +32,10 @@ Model::Model(const std::string &path) {
 	bbox = Box(p_min, p_max);
 
 	std::vector<Object*> objs;
-	for (auto& tri: triangles)
+	for (auto& tri: triangles) {
 		objs.push_back(&tri);
+		area += tri.get_area();
+	}
 	bvh.root = bvh.build(objs);
 }
 
@@ -42,7 +45,20 @@ Intersection Model::intersect(const Ray &ray) {
 	return ret;
 }
 
-void Model::transform(const mat4 &m) {
-	for (auto& tri: triangles)
-		tri.transform(m);
+bool Model::is_intersect(const Ray &ray) {
+	return false;
+}
+
+float Model::get_area() {
+	return area;
+}
+
+bool Model::is_emmision() {
+	return material->is_emission();
+}
+
+void Model::sample(Intersection &inter, float &pdf) {
+	bvh.sample(inter, pdf);
+	inter.material = material;
+	inter.emit = material->emit;
 }
