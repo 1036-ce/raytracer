@@ -1,10 +1,13 @@
 #pragma once
+#include <iostream>
 #include <random>
-#include "color.h"
+
+class Color;
 
 // global type alias
 using color_t = Color;
 using depth_t = float;
+using Float = float;
 
 constexpr float PI = 3.141592653;
 

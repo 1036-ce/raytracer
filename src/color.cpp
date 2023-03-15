@@ -31,17 +31,17 @@ Color operator*(float intensity, const Color &c) {
 
 Color operator*(const Color &c, const vec3& v) {
 	Color ret;
-	ret.r = std::clamp(c.r * v.x, 0.0, 1.0);
-	ret.g = std::clamp(c.g * v.y, 0.0, 1.0);
-	ret.b = std::clamp(c.b * v.z, 0.0, 1.0);
+	ret.r = std::clamp<Float>(c.r * v.x, 0.0, 1.0);
+	ret.g = std::clamp<Float>(c.g * v.y, 0.0, 1.0);
+	ret.b = std::clamp<Float>(c.b * v.z, 0.0, 1.0);
 	return ret;
 }
 
 Color operator*(const vec3& v, const Color &c) {
 	Color ret;
-	ret.r = std::clamp(c.r * v.x, 0.0, 1.0);
-	ret.g = std::clamp(c.g * v.y, 0.0, 1.0);
-	ret.b = std::clamp(c.b * v.z, 0.0, 1.0);
+	ret.r = std::clamp<Float>(c.r * v.x, 0.0, 1.0);
+	ret.g = std::clamp<Float>(c.g * v.y, 0.0, 1.0);
+	ret.b = std::clamp<Float>(c.b * v.z, 0.0, 1.0);
 	return ret;
 }
 

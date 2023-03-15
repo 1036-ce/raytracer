@@ -12,7 +12,7 @@ void Scene::render() {
     float aspect= width / (float)height;
 	vec3 eye_pos(278, 273, -800);
 
-	int spp = 16;
+	int spp = 1;
 	for (int j = 0; j < height; ++j) {
 		for (int i = 0; i < width; ++i) {
             float x = (2 * (i + 0.5) / (float)width - 1) * aspect* scale;
