@@ -14,6 +14,7 @@ void Scene::render() {
 
 	int spp = 1;
 	for (int j = 0; j < height; ++j) {
+#pragma omp parallel for
 		for (int i = 0; i < width; ++i) {
             float x = (2 * (i + 0.5) / (float)width - 1) * aspect* scale;
             float y = (2 * (j + 0.5) / (float)height - 1) * scale;
@@ -25,8 +26,8 @@ void Scene::render() {
             }
 			color_t color(tmp.x, tmp.y, tmp.z);
 			// if (vec3(color.r, color.g, color.b).norm() > 0.001)
-			if (tmp.norm() > 0.001)
-				int a = 1;
+			// if (tmp.norm() > 0.001)
+			// 	int a = 1;
 			color_buf.set(i, j, 0, color);
 		}
 		update_progress((float)j / height);
@@ -57,8 +58,10 @@ void Scene::buildBVH() {
 vec3 Scene::cast_ray(const Ray &ray) {
 	auto inter = intersect(ray);
 	if (inter.happened) {
-		if (inter.material->is_emission())
-			return inter.material->emit;
+		if (inter.material->type() == MaterialType::EMITTER)
+			return inter.material->eval(vec3(), -ray.dir, inter.normal);
+		// if (inter.material->is_emission())
+			// return inter.material->emit;
 
 
 		vec3 L_dir(0);
@@ -81,15 +84,18 @@ vec3 Scene::cast_ray(const Ray &ray) {
 
 		auto tmp = intersect(to_light);
 		if (tmp.happened && (tmp.pos - light_pos).norm() < 0.01) {
-			vec3 f_r = inter.material->eval(ray.dir, to_light_dir, N);		// the brdf value
-			L_dir = light_inter.emit * f_r * dot(to_light_dir, N) * dot(-to_light_dir, NN) / to_light_dist2 / pdf_light;
+			vec3 f_r = inter.material->eval(ray.dir, to_light_dir, N);	
+			// L_dir = light_inter.emit * f_r * dot(to_light_dir, N) * dot(-to_light_dir, NN) / to_light_dist2 / pdf_light;
+			vec3 tmp = light_inter.material->eval(vec3(), -to_light_dir, light_inter.normal);
+			L_dir = tmp * f_r * dot(to_light_dir, N) * dot(-to_light_dir, NN) / to_light_dist2 / pdf_light;
 		}
 
 		if (random_float() < russian_roulette) {
 			vec3 next_dir = inter.material->sample(ray.dir, N).normalize();
 			Ray next_ray(pos, next_dir);
 			Intersection next_inter = intersect(next_ray);
-			if (next_inter.happened && !next_inter.material->is_emission()) {
+			// if (next_inter.happened && !next_inter.material->is_emission()) {
+			if (next_inter.happened && next_inter.material->type() != MaterialType::EMITTER) {
 				auto tmp = inter.material;
 				float pdf = inter.material->pdf(ray.dir, next_dir, N);
 				vec3 f_r = inter.material->eval(ray.dir, next_dir, N);
@@ -115,6 +121,7 @@ void Scene::sample_light(Intersection &inter, float &pdf_light) {
 	sum_area = 0;
 	for (Object *obj : objs) {
 		if (obj->is_emmision()) {
+		// if (obj->)
 			sum_area += obj->get_area();
 			if (sum_area >= p) {
 				obj->sample(inter, pdf_light);

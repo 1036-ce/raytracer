@@ -22,7 +22,7 @@
 class Model : public Object {
 public:
 	Model() = default;
-	Model(const std::string& path, Material *m = new Material());
+	Model(const std::string& path, Material *m = nullptr);
 	Intersection intersect(const Ray& ray) override;
 	bool is_intersect(const Ray& ray) override;
 	Box  get_box() override { return bbox;}

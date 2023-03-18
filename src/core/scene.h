@@ -20,7 +20,7 @@ private:
 	void buildBVH();
 
 	// whitted style ray tracing
-	color_t cast_ray(const Ray& ray, int depth);
+	// color_t cast_ray(const Ray& ray, int depth);
 
 	// path tracing
 	vec3 cast_ray(const Ray& ray);

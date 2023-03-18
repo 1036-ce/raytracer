@@ -55,11 +55,12 @@ float Model::get_area() {
 }
 
 bool Model::is_emmision() {
-	return material->is_emission();
+	// return material->is_emission();
+	return material->type() == MaterialType::EMITTER;
 }
 
 void Model::sample(Intersection &inter, float &pdf) {
 	bvh.sample(inter, pdf);
 	inter.material = material;
-	inter.emit = material->emit;
+	// inter.emit = material->emit;
 }

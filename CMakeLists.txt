@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(src/core)
 include_directories(src/materials)
+include_directories(src/shape)
 
 find_package(OpenMP)
 if(OPENMP_FOUND)
@@ -21,6 +22,10 @@ endif()
 
 enable_testing()
 
-file(GLOB SOURCES ./src/core/* ./src/materials/* main.cpp)
+file(GLOB SOURCES 
+        ./src/core/* 
+        ./src/materials/* 
+        ./src/shape/* 
+        main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})

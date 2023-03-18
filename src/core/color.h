@@ -11,6 +11,9 @@ public:
 	Color(float _r, float _g, float _b, float _a = 1.0)
 		: r(_r), g(_g), b(_b), a(_a) { }
 	float& operator[](int idx);
+	explicit operator vec3() const {
+		return vec3(r, g, b);
+	};
 private:
 };
 

@@ -16,7 +16,6 @@ struct Intersection
 	Point3 pos;
 	vec3 normal;
 	vec2 uv;
-	vec3 emit;
 	Material *material;
 	Object   *object;
 };

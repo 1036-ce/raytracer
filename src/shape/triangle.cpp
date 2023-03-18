@@ -1,6 +1,7 @@
 #include "triangle.h"
 
 Intersection Triangle::intersect(const Ray &ray) {
+	Intersection inter;
 	auto S = ray.orig - verts[0];
 	auto E1 = verts[1] - verts[0];
 	auto E2 = verts[2] - verts[0];
@@ -8,20 +9,33 @@ Intersection Triangle::intersect(const Ray &ray) {
 	auto S2 = cross(S, E1);
 
 	float S1E1 = dot(S1, E1);
-	float t = dot(S2, E2) / S1E1;
-	float alpha = dot(S1, S) / S1E1;
-	float beta = dot(S2, ray.dir) / S1E1;
+	if (S1E1 < 0.0001)
+		return inter;
+
+	float invS1E1 = 1.f / S1E1;
+	float t = dot(S2, E2) * invS1E1;
+	if (t < 0)
+		return inter;
+
+	float alpha = dot(S1, S) * invS1E1;
+
+	if (alpha < 0 || alpha > 1)
+		return inter;
+
+	float beta = dot(S2, ray.dir) * invS1E1;
+
+	if (beta < 0 || alpha + beta > 1)
+		return inter;
 
 	// std::cout << alpha << "  " << beta << std::endl;
 
-	Intersection inter;
-	if (t > 0.001 && 1 - alpha - beta >= 0 && alpha >= 0 && beta >= 0) {
+	// if (t > 0.001 && 1 - alpha - beta >= 0 && alpha >= 0 && beta >= 0) {
 		inter.happened = true;
 		inter.distance = t;
 		inter.pos = ray.at(t);
 		inter.uv = (1 - alpha - beta) * uv[0] + alpha * uv[1] + beta * uv[2];
 		inter.normal = (1 - alpha - beta) * normals[0] + alpha * normals[1] + beta * normals[2];
-	}
+	// }
 	return inter;
 }
 
