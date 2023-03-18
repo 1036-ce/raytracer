@@ -4,7 +4,8 @@ project(raytracer VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(src)
+include_directories(src/core)
+include_directories(src/materials)
 
 find_package(OpenMP)
 if(OPENMP_FOUND)
@@ -20,6 +21,6 @@ endif()
 
 enable_testing()
 
-file(GLOB SOURCES ./src/* main.cpp)
+file(GLOB SOURCES ./src/core/* ./src/materials/* main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
