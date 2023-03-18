@@ -12,8 +12,8 @@ struct Intersection
 		material = nullptr;
 	}
 	bool happened;
-	double distance;
-	vec3 pos;
+	Float distance;
+	Point3 pos;
 	vec3 normal;
 	vec2 uv;
 	vec3 emit;

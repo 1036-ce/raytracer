@@ -1,6 +1,6 @@
 #include "camera.h"
 
-Camera::Camera(vec3 pos_, vec3 target, vec3 up_, int width, int height, float fovY) {
+Camera::Camera(Point3 pos_, Point3 target, vec3 up_, int width, int height, float fovY) {
 	pos = pos_;
 	front = (target - pos_).normalize();
 	right = cross(front, up_).normalize();
@@ -11,6 +11,7 @@ Camera::Camera(vec3 pos_, vec3 target, vec3 up_, int width, int height, float fo
 }
 
 Ray Camera::get_ray(float x, float y) {
-	vec3 dir = left_down + right * x + up * y;
+	Point3 pixel = left_down + right * x + up * y;
+	vec3 dir = pixel - Point3(0, 0, 0);
 	return Ray(pos, dir);
 }

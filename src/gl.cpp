@@ -81,15 +81,6 @@ mat4 perspective(float fovY, float aspect, double near, double far) {
 	return ret;
 }
 
-float radius(float angle) {
-	// angel * pi / 180
-	return angle * 0.01745329251994329576923690768489;
-}
-
-float degree(float rad) {
-	return rad / 0.01745329251994329576923690768489;
-}
-
 float area(vec3 pts[3]) {
 	vec3 v1 = pts[1] - pts[0];
 	vec3 v2 = pts[2] - pts[0];

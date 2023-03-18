@@ -10,7 +10,7 @@ void Scene::render() {
 	ColorBuffer color_buf(width, height, color_t(0, 0, 0));
     float scale = tan((fovY * 0.5));
     float aspect= width / (float)height;
-	vec3 eye_pos(278, 273, -800);
+	Point3 eye_pos(278, 273, -800);
 
 	int spp = 1;
 	for (int j = 0; j < height; ++j) {
@@ -36,7 +36,12 @@ void Scene::render() {
 	TGAImage image(width, height, TGAImage::RGB);
 	for (int i = 0; i < width; ++i) {
 		for (int j = 0; j < height; ++j) {
-			image.set(i, j, color_buf.get_value(i, j));
+			color_t c = color_buf.get_value(i, j);
+			c.r = std::clamp<float>(c.r, 0, 1);
+			c.g = std::clamp<float>(c.g, 0, 1);
+			c.b = std::clamp<float>(c.b, 0, 1);
+			c.a = std::clamp<float>(c.a, 0, 1);
+			image.set(i, j, c);
 		}
 	}
 	image.write_tga_file("output.tga");
@@ -48,105 +53,6 @@ void Scene::buildBVH() {
 	bvh.root = bvh.build(objs);
 }
 
-// whitted style ray tracing
-// color_t Scene::cast_ray(const Ray &ray, int depth) {
-// 	if (depth > 4)
-// 		return color_t(0.2, 0.6, 0.8);
-// 	auto inter = intersect(ray);
-// 	color_t hit_color(0.2, 0.6, 0.8);
-// 	if (inter.happened) {
-// 		switch (inter.material->m_type)
-// 		{
-// 			case MaterialType::DIFFUSE: {
-// 				vec3 pt = ray.at(inter.distance);
-// 				vec3 normal = inter.normal.normalize();
-// 				vec3 shadow_pt = dot(ray.dir, normal) > 0 ? pt - normal * 0.00001 : pt + normal * 0.00001;
-// 				vec3 diff_intensity(0);
-// 				vec3 spec_intensity(0);
-// 				for (Light light: lights) {
-// 					vec3 light_dir = light.pos - pt;
-// 					float light_dist2 = light_dir.norm2();
-// 					light_dir = light_dir.normalize();
-// 					bool shadow = bvh.intersect(Ray(shadow_pt, light_dir)).happened;
-// 					float factor = std::max(0.0, dot(light_dir, normal));
-// 					diff_intensity += shadow ? vec3(0) : ((factor / light_dist2) * light.intensity);
-// 					vec3 reflect_dir = reflect(normal, -light_dir);
-// 					vec3 halfway_dir = ( -ray.dir + light_dir).normalize();
-// 					factor = std::max(0.0, -dot(reflect_dir, ray.dir));
-// 					spec_intensity += shadow ? vec3(0) : (pow(factor, inter.material->Ns) / light_dist2 * light.intensity);
-// 				}
-// 				hit_color =  inter.material->Kd * diff_intensity + inter.material->Ks * spec_intensity; 
-// 				break;
-// 			}
-// 			case MaterialType::REFLECT_REFRACT : {
-// 				vec3 pt = ray.at(inter.distance);
-// 				vec3 normal = inter.normal.normalize();
-// 				vec3 shadow_pt = dot(ray.dir, normal) > 0 ? pt - normal * 0.00001 : pt + normal * 0.00001;
-// 				vec3 reflect_dir = reflect(normal, ray.dir);
-// 				vec3 reflect_pt = dot(reflect_dir, normal) > 0 ? (pt + normal * 0.00001) : (pt - normal * 0.00001);
-// 				color_t reflect_color = cast_ray(Ray(reflect_pt, reflect_dir), depth + 1);
-// 				auto refract_dir = refract(normal, ray.dir, inter.material->Ni);
-// 				color_t refract_color = {0, 0, 0};
-// 				if (refract_dir.has_value()) {
-// 					vec3 refract_pt = dot(refract_dir.value(), normal) > 0 ? (pt + normal * 0.00001) : (pt - normal * 0.00001);
-// 					refract_color = cast_ray(Ray(pt, refract_dir.value()), depth + 1);
-// 				}
-// 				vec3 diff_intensity(0);
-// 				vec3 spec_intensity(0);
-// 				for (Light light: lights) {
-// 					vec3 light_dir = light.pos - pt;
-// 					float light_dist2 = light_dir.norm2();
-// 					light_dir = light_dir.normalize();
-// 					bool shadow = bvh.intersect(Ray(shadow_pt, light_dir)).happened;
-// 					float factor = std::max(0.0, dot(light_dir, normal));
-// 					diff_intensity += shadow ? vec3(0) : ((factor / light_dist2) * light.intensity);
-// 					vec3 reflect_dir = reflect(normal, -light_dir);
-// 					vec3 halfway_dir = ( -ray.dir + light_dir).normalize();
-// 					factor = std::max(0.0, -dot(reflect_dir, ray.dir));
-// 					spec_intensity += shadow ? vec3(0) : (pow(factor, inter.material->Ns) / light_dist2 * light.intensity);
-// 				}
-// 				float fres = fresnel(ray.dir, normal, inter.material->Ni);
-// 				// if (refract_color.r == 0 && refract_color.g == 0 && refract_color.b == 0)
-// 				// 	std::cout << 'a' << std::endl;
-// 				hit_color = inter.material->Kd * diff_intensity 
-// 						  + inter.material->Ks * spec_intensity
-// 						  + reflect_color * fres
-// 						  + refract_color * (1 - fres);
-// 				break;
-// 			}
-// 			case MaterialType::REFLECT : {
-// 				vec3 pt = ray.at(inter.distance);
-// 				vec3 normal = inter.normal.normalize();
-// 				vec3 shadow_pt = dot(ray.dir, normal) > 0 ? pt - normal * 0.00001 : pt + normal * 0.00001;
-// 				vec3 reflect_dir = reflect(normal, ray.dir);
-// 				vec3 reflect_pt = dot(reflect_dir, normal) > 0 ? (pt + normal * 0.00001) : (pt - normal * 0.00001);
-// 				color_t reflect_color = cast_ray(Ray(reflect_pt, reflect_dir), depth + 1);
-// 				vec3 diff_intensity(0);
-// 				vec3 spec_intensity(0);
-// 				for (Light light: lights) {
-// 					vec3 light_dir = light.pos - pt;
-// 					float light_dist2 = light_dir.norm2();
-// 					light_dir = light_dir.normalize();
-// 					bool shadow = bvh.intersect(Ray(shadow_pt, light_dir)).happened;
-// 					float factor = std::max(0.0, dot(light_dir, normal));
-// 					diff_intensity += shadow ? vec3(0) : ((factor / light_dist2) * light.intensity);
-// 					vec3 reflect_dir = reflect(normal, -light_dir);
-// 					vec3 halfway_dir = ( -ray.dir + light_dir).normalize();
-// 					factor = std::max(0.0, -dot(reflect_dir, ray.dir));
-// 					spec_intensity += shadow ? vec3(0) : (pow(factor, inter.material->Ns) / light_dist2 * light.intensity);
-// 				}
-// 				float fres = fresnel(ray.dir, normal, inter.material->Ni);
-// 				hit_color = inter.material->Kd * diff_intensity 
-// 						  + inter.material->Ks * spec_intensity
-// 						  + reflect_color * fres;
-// 				// hit_color = (reflect_color )* fres;
-// 				break;
-// 			}
-// 		}
-// 	}
-// 	return hit_color;
-// }
-// path tracing
 
 vec3 Scene::cast_ray(const Ray &ray) {
 	auto inter = intersect(ray);
@@ -163,20 +69,20 @@ vec3 Scene::cast_ray(const Ray &ray) {
 		sample_light(light_inter, pdf_light);
 
 		// vec3 pos = ray.at(inter.distance);
-		vec3 pos = inter.pos;
-		vec3 light_pos = light_inter.pos;
+		Point3 pos = inter.pos;
+		Point3 light_pos = light_inter.pos;
 
 		vec3 N = inter.normal.normalize();	// object' surface normal
 		vec3 NN = light_inter.normal.normalize();	// light' surface normal
 
 		vec3 to_light_dir = (light_pos - pos).normalize();
-		float to_light_dist = (light_pos - pos).norm2();
+		float to_light_dist2 = (light_pos - pos).norm2();
 		Ray to_light(pos, to_light_dir);
 
 		auto tmp = intersect(to_light);
 		if (tmp.happened && (tmp.pos - light_pos).norm() < 0.01) {
 			vec3 f_r = inter.material->eval(ray.dir, to_light_dir, N);		// the brdf value
-			L_dir = light_inter.emit * f_r * dot(to_light_dir, N) * dot(-to_light_dir, NN) / to_light_dist / pdf_light;
+			L_dir = light_inter.emit * f_r * dot(to_light_dir, N) * dot(-to_light_dir, NN) / to_light_dist2 / pdf_light;
 		}
 
 		if (random_float() < russian_roulette) {

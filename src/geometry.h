@@ -458,6 +458,10 @@ inline vec3 operator-(const Point3& p1, const Point3& p2) {
 	return vec3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
 }
 
+inline Point3 operator-(const Point3& p, const vec3& v) {
+	return Point3(p.x - v.x, p.y - v.y, p.z - v.z);
+}
+
 inline Point3 operator*(const Point3& p1, Float v) {
 	return Point3(p1.x * v, p1.y * v, p1.z * v);
 }
@@ -470,3 +474,16 @@ inline Point3 operator/(const Point3& p1, Float v) {
 	Float inv = (Float)1 / v;
 	return Point3(p1.x * inv, p1.y * inv, p1.z * inv);
 }
+
+class Ray {
+public:
+	Ray() = default;
+	Ray(const Point3& orig_, const vec3& dir_)
+		: orig(orig_), dir(dir_.normalize()) {}
+	Point3 at(Float t) const {
+		return orig + t * dir;
+	};
+
+	Point3 orig;
+	vec3 dir;
+};

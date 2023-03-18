@@ -4,7 +4,6 @@
 #include <tuple>
 #include "geometry.h"
 #include "gl.h"
-#include "ray.h"
 #include "box.h"
 #include "object.h"
 
@@ -12,7 +11,7 @@ class Triangle : public Object
 {
 public:
 	Triangle() = default;
-	Triangle(vec3 pts[3], vec3 nrms[3], vec2 uv_coords[3]) {
+	Triangle(Point3 pts[3], vec3 nrms[3], vec2 uv_coords[3]) {
 		for (int i = 0; i < 3; ++i) {
 			verts[i] = pts[i];
 			normals[i] = nrms[i].normalize();
@@ -28,7 +27,7 @@ public:
 
 	~Triangle() = default;
 private:
-	vec3 verts[3];
+	Point3 verts[3];
 	vec3 normals[3];
 	vec2 uv[3];
 };

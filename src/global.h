@@ -9,7 +9,22 @@ using color_t = Color;
 using depth_t = float;
 using Float = float;
 
+constexpr Float Infinity = std::numeric_limits<Float>::infinity();
 constexpr float PI = 3.141592653;
+constexpr Float MachineEpsilon = std::numeric_limits<Float>::epsilon() * 0.5;
+
+constexpr Float gamma(int n) {
+    return (n * MachineEpsilon) / (1 - n * MachineEpsilon);
+}
+
+constexpr float radius(float angle) {
+	return angle * 0.01745329251994329576923690768489;
+}
+
+constexpr float degree(float rad) {
+	return rad / 0.01745329251994329576923690768489;
+}
+
 
 inline float random_float() {
     static std::random_device rd;

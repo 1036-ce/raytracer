@@ -4,14 +4,6 @@
 #include "buffer.h"
 
 
-class IShader {
-public:
-	virtual vec4 vertex(int iface, int nthvert) = 0;
-	virtual std::optional<color_t> fragment(vec3 bar) = 0;
-	virtual ~IShader() = default;
-};
-
-
 mat4 translate(const mat4& m, const vec3& v);
 
 mat4 rotate(const mat4& m, const float& angle, const vec3& v);
@@ -36,9 +28,9 @@ mat4 viewport(int x, int y, int w, int h);
 
 color_t texture(TGAImage *simpler, const vec2& uv);
 
-float radius(float angle);
+// float radius(float angle);
 
-float degree(float angle);
+// float degree(float angle);
 
 // return the area of the triangle
 float area(vec3 pts[3]);
