@@ -27,15 +27,11 @@ Intersection Triangle::intersect(const Ray &ray) {
 	if (beta < 0 || alpha + beta > 1)
 		return inter;
 
-	// std::cout << alpha << "  " << beta << std::endl;
-
-	// if (t > 0.001 && 1 - alpha - beta >= 0 && alpha >= 0 && beta >= 0) {
-		inter.happened = true;
-		inter.distance = t;
-		inter.pos = ray.at(t);
-		inter.uv = (1 - alpha - beta) * uv[0] + alpha * uv[1] + beta * uv[2];
-		inter.normal = (1 - alpha - beta) * normals[0] + alpha * normals[1] + beta * normals[2];
-	// }
+	inter.happened = true;
+	inter.distance = t;
+	inter.pos = ray.at(t);
+	inter.uv = (1 - alpha - beta) * uv[0] + alpha * uv[1] + beta * uv[2];
+	inter.normal = (1 - alpha - beta) * normals[0] + alpha * normals[1] + beta * normals[2];
 	return inter;
 }
 

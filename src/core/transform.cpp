@@ -64,7 +64,7 @@ Transform translate(const vec3 &delta) {
 }
 
 Transform rotateX(Float angle) {
-	Float rad = radius(angle);
+	Float rad = radian(angle);
 	Float c = std::cos(rad);
 	Float s = std::sin(rad);
 
@@ -78,7 +78,7 @@ Transform rotateX(Float angle) {
 }
 
 Transform rotateY(Float angle) {
-	Float rad = radius(angle);
+	Float rad = radian(angle);
 	Float c = std::cos(rad);
 	Float s = std::sin(rad);
 
@@ -92,7 +92,7 @@ Transform rotateY(Float angle) {
 }
 
 Transform rotateZ(Float angle) {
-	Float rad = radius(angle);
+	Float rad = radian(angle);
 	Float c = std::cos(rad);
 	Float s = std::sin(rad);
 
@@ -106,7 +106,7 @@ Transform rotateZ(Float angle) {
 }
 
 Transform rotate(Float angle, const vec3 &axis) {
-	Float rad = radius(angle);
+	Float rad = radian(angle);
 	Float s = std::sin(rad);
 	Float c = std::cos(rad);
 

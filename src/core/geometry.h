@@ -408,6 +408,10 @@ public:
 		return v.norm2();
 	}
 
+	explicit operator vec3() const {
+		return vec3(x, y, z);
+	}
+
 	Float operator[](int idx) const {
 		if (idx < 0 || idx > 2)
 			std::abort();

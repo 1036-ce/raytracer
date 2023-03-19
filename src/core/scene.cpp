@@ -5,6 +5,8 @@
 #include "camera.h"
 
 void Scene::render() {
+	// for (auto obj: objs)
+	// 	std::cout << obj->get_area() << std::endl;
 	buildBVH();
 
 	ColorBuffer color_buf(width, height, color_t(0, 0, 0));
@@ -12,7 +14,7 @@ void Scene::render() {
     float aspect= width / (float)height;
 	Point3 eye_pos(278, 273, -800);
 
-	int spp = 1;
+	int spp = 16;
 	for (int j = 0; j < height; ++j) {
 #pragma omp parallel for
 		for (int i = 0; i < width; ++i) {
@@ -25,9 +27,6 @@ void Scene::render() {
 				tmp += (cast_ray(ray) / spp);
             }
 			color_t color(tmp.x, tmp.y, tmp.z);
-			// if (vec3(color.r, color.g, color.b).norm() > 0.001)
-			// if (tmp.norm() > 0.001)
-			// 	int a = 1;
 			color_buf.set(i, j, 0, color);
 		}
 		update_progress((float)j / height);

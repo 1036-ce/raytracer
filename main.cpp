@@ -4,10 +4,11 @@
 #include "model.h"
 #include "matte.h"
 #include "emitter.h"
+#include "sphere.h"
 
 int main() {
     // Change the definition here to change resolution
-    Scene scene(784, 784, radius(40));
+    Scene scene(784, 784, radian(40));
 
     // Material* red = new Material(MaterialType::DIFFUSE, vec3(0.0f));
     // red->Kd = vec3(0.63f, 0.065f, 0.05f);
@@ -32,6 +33,7 @@ int main() {
     Model left("../models/cornellbox/left.obj", red);
     Model right("../models/cornellbox/right.obj", green);
     Model light_("../models/cornellbox/light.obj", light);
+    Sphere sp(Point3(130, 165, 65), 60, red);
 
     scene.add(&floor);
     scene.add(&shortbox);
@@ -39,6 +41,7 @@ int main() {
     scene.add(&left);
     scene.add(&right);
     scene.add(&light_);
+    scene.add(&sp);
 
 
 

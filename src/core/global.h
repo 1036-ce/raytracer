@@ -17,7 +17,7 @@ constexpr Float gamma(int n) {
     return (n * MachineEpsilon) / (1 - n * MachineEpsilon);
 }
 
-constexpr float radius(float angle) {
+constexpr float radian(float angle) {
 	return angle * 0.01745329251994329576923690768489;
 }
 

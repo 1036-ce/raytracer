@@ -33,9 +33,10 @@ Model::Model(const std::string &path, Material *m) {
 	bbox = Box(p_min, p_max);
 
 	std::vector<Object*> objs;
+	this->area = 0;
 	for (auto& tri: triangles) {
 		objs.push_back(&tri);
-		area += tri.get_area();
+		this->area += tri.get_area();
 	}
 	bvh.root = bvh.build(objs);
 }
@@ -61,6 +62,6 @@ bool Model::is_emmision() {
 
 void Model::sample(Intersection &inter, float &pdf) {
 	bvh.sample(inter, pdf);
-	inter.material = material;
+	inter.material = this->material;
 	// inter.emit = material->emit;
 }
