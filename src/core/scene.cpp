@@ -14,7 +14,7 @@ void Scene::render() {
     float aspect= width / (float)height;
 	Point3 eye_pos(278, 273, -800);
 
-	int spp = 16;
+	int spp = 1;
 	for (int j = 0; j < height; ++j) {
 #pragma omp parallel for
 		for (int i = 0; i < width; ++i) {
@@ -84,9 +84,8 @@ vec3 Scene::cast_ray(const Ray &ray) {
 		auto tmp = intersect(to_light);
 		if (tmp.happened && (tmp.pos - light_pos).norm() < 0.01) {
 			vec3 f_r = inter.material->eval(ray.dir, to_light_dir, N);	
-			// L_dir = light_inter.emit * f_r * dot(to_light_dir, N) * dot(-to_light_dir, NN) / to_light_dist2 / pdf_light;
-			vec3 tmp = light_inter.material->eval(vec3(), -to_light_dir, light_inter.normal);
-			L_dir = tmp * f_r * dot(to_light_dir, N) * dot(-to_light_dir, NN) / to_light_dist2 / pdf_light;
+			vec3 tmp = light_inter.material->emit() * dot(-to_light_dir, NN);
+			L_dir = tmp * f_r * dot(to_light_dir, N)  / to_light_dist2 / pdf_light;
 		}
 
 		if (random_float() < russian_roulette) {

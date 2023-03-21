@@ -18,6 +18,10 @@ public:
 
 	vec3 eval(const vec3& wi, const vec3& wo, const vec3& normal) override;
 
+	vec3 emit() override {
+		return vec3(intensity * color);
+	}
+
 private:
 	color_t color;
 	vec3 intensity;

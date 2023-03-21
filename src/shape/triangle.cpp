@@ -56,5 +56,6 @@ void Triangle::sample(Intersection &inter, float &pdf) {
 	float b2 = r1 * r2;
 	inter.pos = b0 * verts[0] + b1 * verts[1] + b2 * verts[2];
 	inter.normal = b0 * normals[0] + b1 * normals[1] + b2 * normals[2];
+	inter.material = this->material;
 	pdf = 1.f / get_area();
 }

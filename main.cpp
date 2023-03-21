@@ -10,18 +10,6 @@ int main() {
     // Change the definition here to change resolution
     Scene scene(784, 784, radian(40));
 
-    // Material* red = new Material(MaterialType::DIFFUSE, vec3(0.0f));
-    // red->Kd = vec3(0.63f, 0.065f, 0.05f);
-    // Material* green = new Material(MaterialType::DIFFUSE, vec3(0.0f));
-    // green->Kd = vec3(0.14f, 0.45f, 0.091f);
-    // Material* white = new Material(MaterialType::DIFFUSE, vec3(0.0f));
-    // white->Kd = vec3(0.725f, 0.71f, 0.68f);
-    // Material* light = new Material(MaterialType::DIFFUSE, 
-    //                                   (8.0f * vec3(0.747f+0.058f, 0.747f+0.258f, 0.747f) 
-    //                                 + 15.6f * vec3(0.740f+0.287f,0.740f+0.160f,0.740f) 
-    //                                 + 18.4f *vec3(0.737f+0.642f,0.737f+0.159f,0.737f)));
-    // light->Kd = vec3(0.65f);
-
     Material *red = new MatteMaterial(color_t(0.63f, 0.065f, 0.05f));
     Material *green = new MatteMaterial(color_t(0.14f, 0.45f, 0.091f));
     Material *white = new MatteMaterial(color_t(0.725f, 0.71f, 0.68f));

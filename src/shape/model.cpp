@@ -28,7 +28,7 @@ Model::Model(const std::string &path, Material *m) {
 			p_min = Point3(std::min(p_min.x, verts[j].x), std::min(p_min.y, verts[j].y), std::min(p_min.z, verts[j].z));
 			p_max = Point3(std::max(p_max.x, verts[j].x), std::max(p_max.y, verts[j].y), std::max(p_max.z, verts[j].z));
 		}
-		triangles.emplace_back(verts, nrms, uv_coords);
+		triangles.emplace_back(verts, nrms, uv_coords, m);
 	}
 	bbox = Box(p_min, p_max);
 
@@ -62,6 +62,6 @@ bool Model::is_emmision() {
 
 void Model::sample(Intersection &inter, float &pdf) {
 	bvh.sample(inter, pdf);
-	inter.material = this->material;
+	// inter.material = this->material;
 	// inter.emit = material->emit;
 }

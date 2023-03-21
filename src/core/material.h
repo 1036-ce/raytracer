@@ -22,4 +22,7 @@ public:
 
 	virtual vec3 eval(const vec3& wi, const vec3& wo, const vec3& normal) = 0;
 	
+	virtual vec3 emit() {
+		return vec3();
+	}
 };
