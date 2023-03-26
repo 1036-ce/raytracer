@@ -125,7 +125,8 @@ void line(int x0, int y0, int x1, int y1, TGAImage &image, color_t color) {
 }
 
 vec3 reflect(const vec3& n, const vec3& in) {
-	return ((-2 * n * in) * n + in).normalize();
+	// return ((-2 * n * in) * n + in).normalize();
+	return ((-2 * dot(n, in)) * n + in).normalize();
 }
 
 std::optional<vec3> refract(const vec3& N, const vec3& I, float eta) {

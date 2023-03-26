@@ -12,7 +12,7 @@ Intersection Sphere::intersect(const Ray &ray) {
 	if (t_min == Infinity && t_max == Infinity)
 		return inter;
 	
-	if (t_max < 0)
+	if (t_max < 0.01)
 		return inter;
 
 	float t = t_min < 0 ? t_max : t_min;

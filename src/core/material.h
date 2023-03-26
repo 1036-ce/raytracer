@@ -7,7 +7,8 @@ enum class MaterialType {
 	DIFFUSE = 1, 
 	REFLECT_REFRACT = 2, 
 	REFLECT = 4,
-	EMITTER = 8
+	EMITTER = 8,
+	MICROFACET = 16
 };
 
 class Material {

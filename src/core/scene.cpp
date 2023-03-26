@@ -15,6 +15,7 @@ void Scene::render() {
 	Point3 eye_pos(278, 273, -800);
 
 	int spp = 1;
+	
 	for (int j = 0; j < height; ++j) {
 #pragma omp parallel for
 		for (int i = 0; i < width; ++i) {
@@ -94,7 +95,6 @@ vec3 Scene::cast_ray(const Ray &ray) {
 			Intersection next_inter = intersect(next_ray);
 			// if (next_inter.happened && !next_inter.material->is_emission()) {
 			if (next_inter.happened && next_inter.material->type() != MaterialType::EMITTER) {
-				auto tmp = inter.material;
 				float pdf = inter.material->pdf(ray.dir, next_dir, N);
 				vec3 f_r = inter.material->eval(ray.dir, next_dir, N);
 				L_indir = cast_ray(next_ray) * f_r * dot(next_dir, N) / pdf / russian_roulette;
