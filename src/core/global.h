@@ -25,6 +25,10 @@ constexpr float degree(float rad) {
 	return rad / 0.01745329251994329576923690768489;
 }
 
+template<typename T>
+T mix(const T &a, const T &b, float k) {
+	return a * (1 - k) + b * k;
+}
 
 inline float random_float() {
     static std::random_device rd;

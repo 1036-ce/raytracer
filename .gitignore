@@ -1,5 +1,7 @@
 .vscode/
 build/
 obj/
+errors/
+gallery/
 .cache/
 *.png

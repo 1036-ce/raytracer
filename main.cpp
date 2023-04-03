@@ -16,7 +16,7 @@ int main() {
     Material *green = new MatteMaterial(color_t(0.14f, 0.45f, 0.091f));
     Material *white = new MatteMaterial(color_t(0.725f, 0.71f, 0.68f));
     Material *light = new EmitMaterial(color_t(1, 1, 1), vec3(47));
-    Material *ball = new MicorfacetMaterial(color_t(0.73f, 0.25f, 0.35f), 0.4f, 1.85);
+    Material *ball = new MicorfacetMaterial(color_t(0.82f, 0.63f, 0.43f) * 0.2, 0.27f, 1.f);
     // Material *ball = new MatteMaterial(color_t(0.73f, 0.25f, 0.35f));
     Material *mirror = new MirrorMaterial(0.1, 1.85);
 
