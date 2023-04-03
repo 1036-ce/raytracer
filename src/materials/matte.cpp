@@ -2,10 +2,11 @@
 
 vec3 MatteMaterial::sample(const vec3 &wi, const vec3& normal) {
 	float a = random_float(), b = random_float();
-	float z = std::fabs(1.f - 2.f * a);
-	float r = std::sqrt(1 - z * z);
-	float phi = 2 * PI * b;
-	vec3 local_ray(r * std::cos(phi), r * std::sin(phi), z);
+	float cosTheta = std::fabs(1 - 2 * a);
+	float sinTheta = std::sqrt(1 - cosTheta * cosTheta);
+	float cosPhi = std::cos(2 * PI * b);
+	float sinPhi = std::sin(2 * PI * b);
+	vec3 local_ray(sinTheta * sinPhi, sinTheta * cosPhi, cosTheta);
 	return to_world(local_ray, normal);
 }
 

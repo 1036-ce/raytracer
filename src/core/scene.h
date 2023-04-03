@@ -23,7 +23,7 @@ private:
 	// color_t cast_ray(const Ray& ray, int depth);
 
 	// path tracing
-	vec3 cast_ray(const Ray& ray);
+	vec3 cast_ray(const Ray& ray, int depth = 0);
 
 	Intersection intersect(const Ray& ray);
 	void sample_light(Intersection &inter, float &pdf_light);
