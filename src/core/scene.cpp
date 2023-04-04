@@ -14,7 +14,7 @@ void Scene::render() {
     float aspect= width / (float)height;
 	Point3 eye_pos(278, 273, -800);
 
-	int spp = 64;
+	int spp = 2048;
 
 	std::vector<std::pair<float, float>> offsets;
 	for (int i = 0; i < spp; ++i)
@@ -94,8 +94,7 @@ vec3 Scene::cast_ray(const Ray &ray, int depth) {
 		Ray to_light(pos, to_light_dir);
 
 		auto tmp = intersect(to_light);
-		if (tmp.happened && (tmp.pos - light_pos).norm() < 0.01) {
-		// if (inter.material->type() != MaterialType::MICROFACET && (tmp.pos - light_pos).norm() < 0.01) {
+		if (inter.material->type() != MaterialType::REFLECT && (tmp.pos - light_pos).norm() < 0.01) {
 			vec3 f_r = inter.material->eval(ray.dir, to_light_dir, N);	
 			vec3 tmp = light_inter.material->emit() * dot(-to_light_dir, NN);
 			L_dir = tmp * f_r * dot(to_light_dir, N)  / (to_light_dist2 * pdf_light);
@@ -109,15 +108,23 @@ vec3 Scene::cast_ray(const Ray &ray, int depth) {
 
 			Ray next_ray(pos, next_dir);
 			Intersection next_inter = intersect(next_ray);
-			// if (next_inter.happened && !next_inter.material->is_emission()) {
-			if (next_inter.happened && next_inter.material->type() != MaterialType::EMITTER) {
-				float pdf = inter.material->pdf(ray.dir, next_dir, N);
-				vec3 f_r = inter.material->eval(ray.dir, next_dir, N);
-
-				vec3 tmp = cast_ray(next_ray, depth + 1);
-
-				float c = std::max(dot(next_dir, N), 0.f);
-				L_indir = tmp * f_r * c / pdf / russian_roulette;
+			if (inter.material->type() == MaterialType::REFLECT) {
+				if (next_inter.happened) {
+					float pdf = inter.material->pdf(ray.dir, next_dir, N);
+					vec3 f_r = inter.material->eval(ray.dir, next_dir, N);
+					vec3 nxt = cast_ray(next_ray, depth + 1);
+					float c = std::max(dot(next_dir, N), 0.0f);
+					L_indir = (nxt * f_r * c) / (pdf * russian_roulette);
+				}
+			}
+			else {
+				if (next_inter.happened && next_inter.material->type() != MaterialType::EMITTER) {
+					float pdf = inter.material->pdf(ray.dir, next_dir, N);
+					vec3 f_r = inter.material->eval(ray.dir, next_dir, N);
+					vec3 nxt = cast_ray(next_ray, depth + 1);
+					float c = std::max(dot(next_dir, N), 0.f);
+					L_indir = (nxt * f_r * c) / (pdf * russian_roulette);
+				}
 			}
 		}
 		return L_dir + L_indir;

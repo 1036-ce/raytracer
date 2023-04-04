@@ -16,26 +16,23 @@ int main() {
     Material *green = new MatteMaterial(color_t(0.14f, 0.45f, 0.091f));
     Material *white = new MatteMaterial(color_t(0.725f, 0.71f, 0.68f));
     Material *light = new EmitMaterial(color_t(1, 1, 1), vec3(47));
-    Material *ball = new MicorfacetMaterial(color_t(0.82f, 0.63f, 0.43f) * 0.2, 0.27f, 1.f);
-    // Material *ball = new MatteMaterial(color_t(0.73f, 0.25f, 0.35f));
-    Material *mirror = new MirrorMaterial(0.1, 1.85);
+    Material *mirror = new MirrorMaterial();
 
     Model floor("../models/cornellbox/floor.obj", white);
-    Model shortbox("../models/cornellbox/shortbox.obj", white);
-    Model tallbox("../models/cornellbox/tallbox.obj", white);
+    Model shortbox("../models/cornellbox/shortbox.obj", mirror);
+    Model tallbox("../models/cornellbox/tallbox.obj", mirror);
     Model left("../models/cornellbox/left.obj", red);
     Model right("../models/cornellbox/right.obj", green);
     Model light_("../models/cornellbox/light.obj", light);
-    Sphere sp(Point3(160, 100, 330), 100, ball);
+    Sphere sp(Point3(130, 100, 110), 100, white);
 
     scene.add(&floor);
-    // scene.add(&shortbox);
+    scene.add(&shortbox);
     scene.add(&tallbox);
     scene.add(&left);
     scene.add(&right);
     scene.add(&light_);
-    scene.add(&sp);
-    // scene.add(&bunny);
+    // scene.add(&sp);
 
 
 

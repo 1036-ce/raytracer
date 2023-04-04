@@ -23,13 +23,9 @@ vec3 MicorfacetMaterial::sample(const vec3 &wi, const vec3 &normal) {
 float MicorfacetMaterial::pdf(const vec3 &wi, const vec3 &wo, const vec3 &normal) {
 	vec3 v = wo, l = -wi, h = (v + l).normalize(), n = normal.normalize();
 	float D = distributionGGX(n, h, this->roughness);
-	constexpr float eps = 0.01;
-	float ct = std::clamp(dot(n, h), eps, 1.f);
-
-	float st = std::sqrt(1 - ct * ct);
-	st = std::clamp(st, eps, 1.f);
+	float ct = std::clamp(dot(n, h), 0.f, 1.f);
 	float VoH = std::max(dot(v, h), 0.001f);
-	float ret = 2 * PI * D * ct * st / (4 * VoH);
+	float ret = D * ct / (4 * VoH);
 	ret = std::max(ret, 0.001f);
 	return ret;
 }
@@ -41,13 +37,11 @@ vec3 MicorfacetMaterial::eval(const vec3 &wi, const vec3 &wo, const vec3 &normal
 	vec3 v = wo, l = -wi, h = (v + l).normalize(), n = normal;
 	float D = distributionGGX(n, h, this->roughness);
 	vec3 f0 = mix(vec3(0.04), (vec3)this->albedo, this->metalic);
-	vec3 F = fresnelSchlick(v, n, f0);
-
+	vec3 F = fresnelSchlick(v, h, f0);
 	float vis = Vis(n, v, l, this->roughness);
+
 	vec3 spec(D * vis * F);
-
 	vec3 diff = (vec3)this->albedo / PI;
-
 	return spec + (1 - this->metalic) * diff;
 }
 
